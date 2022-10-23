@@ -51,14 +51,11 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-void func();
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-
-uint32_t tick;
 char mqttData[50];
 char mqttTopic[10];
 /* USER CODE END 0 */
@@ -95,8 +92,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   ESP8266_Init(StationMode);
-  ESP8266_wifiConnect("fenerbahce","1907190719");
-  ESP8266_portConnect("TCP", "192.168.1.116", "1883");
+  ESP8266_wifiConnect("******","*******");
+  ESP8266_portConnect("TCP", "***.***.*.***", "1883");
 
   MQTT_InitTypeDef_t mqttSetting;
   mqttSetting.keepAlive = 500;
@@ -250,10 +247,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void func()
-{
-	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-}
+
 /* USER CODE END 4 */
 
 /**

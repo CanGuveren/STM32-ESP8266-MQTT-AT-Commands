@@ -22,12 +22,18 @@ uint8_t RxInterruptFlag;
 uint8_t uartTimeCounter;
 uint8_t uartPacketComplatedFlag;
 
+char Buffer[BUFFERSIZE];
+char rxBuffer[BUFFERSIZE];
+char mqttBuffer[300];
+char mqttPacket[BUFFERSIZE];
+char temp_mqttBuffer[100];
 
 typedef enum
 {
 	funcErr,
 	funcOk,
 }funcState_t;
+
 
 typedef enum
 {
@@ -67,7 +73,6 @@ typedef struct
 #define QoS2			0x04
 
 
-void sendData(char *cmd, uint8_t cmdSize, uint8_t responseSize, uint32_t timeout);
 funcState_t checkResponse(char * response);
 
 /* ESP8266 Function */

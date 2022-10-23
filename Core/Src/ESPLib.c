@@ -5,12 +5,6 @@
  *      Author: Ümit Can Güveren
  */
 
-
-/*EKLENECEKLER*/
-// mqtt connect yaparken password ve id ekleme, flag kontrolleri ve flag'e göre veri paketi oluşturma
-// do-while döngülerinin içinde belli bir süre sonra işlemciye reset atma
-
-
 #include <ESPLib.h>
 #include "main.h"
 
@@ -35,22 +29,21 @@ char *PORTCONNECT = "CONNECT\r\n";
 char *WIFICONNECTED = "WIFI CONNECTED\r\n";
 
 
-void sendData(char *cmd, uint8_t cmdSize, uint8_t responseSize, uint32_t timeout) //size'ı fonksiyonda al.
+static void sendData(char *cmd, uint8_t cmdSize, uint8_t responseSize, uint32_t timeout) //size'ı fonksiyonda al.
 {
 	HAL_StatusTypeDef uartCheck;
 
-	//HAL_UART_Receive(&huart2, (uint8_t *)Buffer, 1, 10); //Receive bufferı temizlemek için.
-
+	//HAL_UART_Receive(&huart2, (uint8_t *)Buffer, 1, 10);
 	memset(Buffer, 0, BUFFERSIZE);
 
 	uartCheck = HAL_UART_Transmit(&huart2, (uint8_t *)cmd, cmdSize, 100);
 
 	if(uartCheck == HAL_OK)
 	{
-		HAL_UART_Receive(&huart2, (uint8_t *)Buffer, cmdSize + responseSize + 2, timeout); //Timeout fonksiyona gelecek. //responseSize eklenecek // +2 = \r\n
+		HAL_UART_Receive(&huart2, (uint8_t *)Buffer, cmdSize + responseSize + 2, timeout); // +2 = \r\n
 	}
-
 }
+
 
 funcState_t ESP8266_Init(espMode_t Mode)
 {
@@ -60,14 +53,14 @@ funcState_t ESP8266_Init(espMode_t Mode)
 
 	do{
 	sendData("AT\r\n", strlen("AT\r\n"), strlen(OK), 100);
-	checkFunc = checkResponse(OK); //OK cevabı alınıyorsa ESP doğru şekilde çalışıyor.
+	checkFunc = checkResponse(OK); 							//If OK response, ESP8266 is working.
 	}while(checkFunc != funcOk);
 
 	do{
 	memset(cmd, 0, sizeof(cmd));
-	cmdSize = sprintf(cmd, "AT+CWMODE=%d\r\n", Mode); //Seçilen mode göre gönderilecek komut ayarlanır.
-	sendData(cmd, cmdSize, strlen(OK), 100);					//Komut gönderilir.
-	checkFunc = checkResponse(OK); //OK cevabı alındıysa istenilen mode ayarlanmıştır.
+	cmdSize = sprintf(cmd, "AT+CWMODE=%d\r\n", Mode);
+	sendData(cmd, cmdSize, strlen(OK), 100);
+	checkFunc = checkResponse(OK);
 	}while(checkFunc != funcOk);
 
 	return funcOk;
@@ -87,24 +80,6 @@ funcState_t ESP8266_Reset(void)
 
 	return funcOk;
 }
-
-
-
-/*
-funcState_t ESP8266_checkVersion()
-{
-	funcState_t checkFunc;
-	char cmd[10];
-
-	do{
-    memset(cmd, 0, 20);
-	sendData("AT+GMR\r\n", strlen("AT+GMR\r\n"), strlen(OK) + 100, 100);
-	checkFunc = checkResponse(OK);
-	}while(checkFunc != funcOk);
-
-	return funcOk;
-}
-*/
 
 funcState_t ESP8266_wifiConnect(char *SSID, char *Password)
 {
