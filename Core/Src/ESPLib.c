@@ -280,7 +280,7 @@ void MQTT_pingReq()
 }
 
 
-void MQTT_unsubsribeTopic(char *topic)
+void MQTT_unsubscribeTopic(char *topic)
 {
 	uint8_t mqttLenght;
 
