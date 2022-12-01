@@ -80,15 +80,15 @@ funcState_t ESP8266_wifiConnect(char *SSID, char *Password)
 	uint8_t cmdSize;
 
 	do{
-	sendData("AT+CWQAP\r\n", strlen("AT+CWQAP\r\n"), strlen(WIFIDISCONNECT), 100);				//Cihaz herhangi bir ağa bağlı ise bağlantı kesilir.
-	checkFunc = (checkResponse(OK) | checkResponse(WIFIDISCONNECT));	//Bağlantının kesildiği kontrol edilir  ve doğruysa döngüden çıkılır.
+	sendData("AT+CWQAP\r\n", strlen("AT+CWQAP\r\n"), strlen(WIFIDISCONNECT), 100);	//If the device is connected to a network, the connection is disconnected.
+	checkFunc = (checkResponse(OK) | checkResponse(WIFIDISCONNECT));
 	}while(checkFunc != funcOk);
 
 	do{
 	memset(cmd, 0, sizeof(cmd));
-	cmdSize = sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, Password);	//Ağ id ve şifresine göre gönderilecek komut ayarlanır.
-	sendData(cmd, cmdSize, strlen(WIFICONNECT) + strlen(OK), 20000);		   								//Gelen tüm metinleri almak için timeout süresi uzun tutulmuştur.
-	checkFunc = (checkResponse(OK) | checkResponse(WIFICONNECTED)); 										//OK cevabı alınıyorsa ağa bağlanılmıştır.
+	cmdSize = sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, Password);
+	sendData(cmd, cmdSize, strlen(WIFICONNECT) + strlen(OK), 20000);		//The timeout period is long to receive all incoming data.
+	checkFunc = (checkResponse(OK) | checkResponse(WIFICONNECTED));
 	}while(checkFunc != funcOk);
 
 	return funcOk;
@@ -101,15 +101,15 @@ funcState_t ESP8266_portConnect(char *type, char *remoteIP, char *remotePort)
 	uint8_t cmdSize;
 
 	do{
-	sendData("AT+CIPCLOSE\r\n", strlen("AT+CIPCLOSE\r\n"), strlen(ERROR_) ,100);	//Cihaz herhangi bir ağa bağlı ise bağlantı kesilir.
-	checkFunc = checkResponse(OK) | checkResponse(ERROR_);							//Bağlantının kesildiği kontrol edilir  ve doğruysa döngüden çıkılır.
+	sendData("AT+CIPCLOSE\r\n", strlen("AT+CIPCLOSE\r\n"), strlen(ERROR_) ,100);
+	checkFunc = checkResponse(OK) | checkResponse(ERROR_);
 	}while(checkFunc != funcOk);
 
 	do{
 	memset(cmd, 0, sizeof(cmd));
-	cmdSize = sprintf(cmd, "AT+CIPSTART=\"%s\",\"%s\",%s\r\n", type, remoteIP, remotePort);		//Ağ id ve şifresine göre gönderilecek komut ayarlanır.
-	sendData(cmd, cmdSize, strlen(PORTCONNECT) + strlen(OK), 50000);		   										//Gelen tüm metinleri almak için timeout süresi uzun tutulmuştur.
-	checkFunc = checkResponse(OK); 																//OK cevabı alınıyorsa ağa bağlanılmıştır.
+	cmdSize = sprintf(cmd, "AT+CIPSTART=\"%s\",\"%s\",%s\r\n", type, remoteIP, remotePort);
+	sendData(cmd, cmdSize, strlen(PORTCONNECT) + strlen(OK), 50000);
+	checkFunc = checkResponse(OK);
 	}while(checkFunc != funcOk);
 
 	return funcOk;
@@ -125,7 +125,7 @@ funcState_t ESP8266_sendMessage(char *msg, uint8_t msgSize)
 
 	do{
 	memset(cmd, 0, sizeof(cmd));
-    cmdSize = sprintf(cmd, "AT+CIPSEND=%d\r\n", msgSize);		//Ağ id ve şifresine göre gönderilecek komut ayarlanır.
+    cmdSize = sprintf(cmd, "AT+CIPSEND=%d\r\n", msgSize);
     sendData(cmd, cmdSize, 15, 100);
 	checkFunc = checkResponse(CIPSEND_RESPONSE) | checkResponse(SEND_OK);
 	}while(checkFunc != funcOk);

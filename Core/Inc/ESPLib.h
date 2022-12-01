@@ -2,7 +2,7 @@
  * ESPLib.h
  *
  *  Created on: Feb 14, 2022
- *      Author: DELL
+ *      Author: Can Guveren
  */
 
 #ifndef INC_ESPLIB_H_
