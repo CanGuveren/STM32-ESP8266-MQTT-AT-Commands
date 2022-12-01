@@ -98,7 +98,7 @@ int main(void)
   MQTT_InitTypeDef_t mqttSetting;
   mqttSetting.keepAlive = 500;
   mqttSetting.connectFlag = CleanSession;
-  mqttSetting.clientID = "Can";
+  mqttSetting.clientID = "MqttID";
   MQTT_connectBroker(&mqttSetting);
   MQTT_subscribeTopic("IOT", 0);
   HAL_UART_Receive_IT(&huart2 , &uartRxData , 1);
