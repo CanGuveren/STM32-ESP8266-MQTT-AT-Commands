@@ -26,9 +26,9 @@ uint8_t temp_mqttMsgLen, temp_mqttTopicLen;
 
 char Buffer[BUFFERSIZE];
 char rxBuffer[BUFFERSIZE];
-char mqttBuffer[300];
+char mqttBuffer[BUFFERSIZE];
 char mqttPacket[BUFFERSIZE];
-char temp_mqttBuffer[100];
+char temp_mqttBuffer[BUFFERSIZE];
 
 typedef enum
 {
