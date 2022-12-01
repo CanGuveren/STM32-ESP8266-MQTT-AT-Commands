@@ -116,9 +116,11 @@ int main(void)
 
 	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
 
+	  MQTT_publishTopic("test", "hello", QoS0);
 	  MQTT_pingReq();
 	  HAL_Delay(1000);
 
+	  MQTTDataHandler(mqttTopic, mqttData);
 	  /*
 	  MQTTDataHandler(mqttTopic, mqttData);
 

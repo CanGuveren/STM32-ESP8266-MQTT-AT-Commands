@@ -2,7 +2,7 @@
  * ESPLib.c
  *
  *  Created on: Feb 14, 2022
- *      Author: Ümit Can Güveren
+ *      Author: Can Güveren
  */
 
 #include <ESPLib.h>
@@ -10,17 +10,9 @@
 
 extern UART_HandleTypeDef huart2;
 
-char Buffer[BUFFERSIZE];
-char rxBuffer[BUFFERSIZE];
-char mqttBuffer[300];
-char mqttPacket[BUFFERSIZE];
-char temp_mqttBuffer[100];
-
-uint8_t temp_mqttMsgLen, temp_mqttTopicLen;
-
 /*Responses and Commands*/
 char *OK = "OK\r\n";
-char *WIFIDISCONNECT = "OK\r\nWIFI DISCONNECT\r\n"; //AT+CWQAP komutu karşılığı cihaz bir ağa bağlı ise verdiği cevap.
+char *WIFIDISCONNECT = "OK\r\nWIFI DISCONNECT\r\n";
 char *WIFICONNECT = "WIFI CONNECTED\r\nWIFI GOT IP\r\n";
 char *SEND_OK = "SEND OK\r\n";
 char *ERROR_ = "ERROR\r\n";
@@ -29,7 +21,7 @@ char *PORTCONNECT = "CONNECT\r\n";
 char *WIFICONNECTED = "WIFI CONNECTED\r\n";
 
 
-static void sendData(char *cmd, uint8_t cmdSize, uint8_t responseSize, uint32_t timeout) //size'ı fonksiyonda al.
+static void sendData(char *cmd, uint8_t cmdSize, uint8_t responseSize, uint32_t timeout)
 {
 	HAL_StatusTypeDef uartCheck;
 
@@ -75,7 +67,7 @@ funcState_t ESP8266_Reset(void)
 	do{
     memset(cmd, 0, sizeof(cmd));
 	sendData("AT+RST\r\n", strlen("AT+RST\r\n"), strlen(OK), 100);
-	checkFunc = checkResponse(OK); //OK cevabı alınıyorsa ESP8266 resetlendi.
+	checkFunc = checkResponse(OK);
 	}while(checkFunc != funcOk);
 
 	return funcOk;
@@ -267,19 +259,6 @@ void MQTT_subscribeTopic(char *topic, uint8_t QoS)
 }
 
 
-void MQTT_pingReq()
-{
-	uint8_t mqttLenght;
-	uint8_t remainingLenght = 0;
-
-	memset(mqttPacket, 0, 100);
-
-	mqttLenght = sprintf(mqttPacket, "%c%c", (char)MQTTpingreq, (char)remainingLenght);
-
-	ESP8266_sendMessage(mqttPacket, mqttLenght);
-}
-
-
 void MQTT_unsubscribeTopic(char *topic)
 {
 	uint8_t mqttLenght;
@@ -309,6 +288,19 @@ void MQTT_disconnectBroker(void)
 	ESP8266_sendMessage(mqttPacket, mqttLenght);
 
 }
+
+void MQTT_pingReq()
+{
+	uint8_t mqttLenght;
+	uint8_t remainingLenght = 0;
+
+	memset(mqttPacket, 0, 100);
+
+	mqttLenght = sprintf(mqttPacket, "%c%c", (char)MQTTpingreq, (char)remainingLenght);
+
+	ESP8266_sendMessage(mqttPacket, mqttLenght);
+}
+
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {

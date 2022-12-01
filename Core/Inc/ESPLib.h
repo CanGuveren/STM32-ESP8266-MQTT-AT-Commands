@@ -22,6 +22,8 @@ uint8_t RxInterruptFlag;
 uint8_t uartTimeCounter;
 uint8_t uartPacketComplatedFlag;
 
+uint8_t temp_mqttMsgLen, temp_mqttTopicLen;
+
 char Buffer[BUFFERSIZE];
 char rxBuffer[BUFFERSIZE];
 char mqttBuffer[300];
@@ -73,7 +75,6 @@ typedef struct
 #define QoS2			0x04
 
 
-funcState_t checkResponse(char * response);
 
 /* ESP8266 Function */
 funcState_t ESP8266_Init(espMode_t mode);
@@ -81,15 +82,18 @@ funcState_t ESP8266_Reset();
 funcState_t ESP8266_wifiConnect(char *SSID, char *Password);
 funcState_t ESP8266_portConnect(char *type, char *remoteIP, char *remotePort);
 funcState_t ESP8266_sendMessage(char *msg, uint8_t msgSize);
-//funcState_t ESP8266_checkVersion();
+funcState_t checkResponse(char * response);
+
+
 /* MQTT Function */
-//void MQTT_connectBroker(uint8_t flag, uint16_t keepAlive, char *clientID);
 void MQTT_connectBroker(MQTT_InitTypeDef_t *MQTTConnect);
 void MQTT_publishTopic(char *topic, char *msg, uint8_t QoS);
 void MQTT_subscribeTopic(char *topic, uint8_t QoS);
 void MQTT_unsubsribeTopic(char *topic);
 void MQTT_disconnectBroker(void);
 void MQTT_pingReq();
+
+
 /* Receiver functions */
 void MQTTDataHandler(char *mqttTopic, char *mqttMsg);
 void MQTTTimer(void);
