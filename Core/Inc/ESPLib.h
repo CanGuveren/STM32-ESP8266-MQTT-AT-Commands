@@ -13,6 +13,8 @@
 #include "stdint.h"
 #include "string.h"
 #include "stdbool.h"
+#include "stm32f4xx_hal.h"
+
 
 #define BUFFERSIZE 100
 
@@ -77,7 +79,7 @@ typedef struct
 
 
 /* ESP8266 Function */
-funcState_t ESP8266_Init(espMode_t mode);
+funcState_t ESP8266_Init(espMode_t mode, UART_HandleTypeDef UARTHandle);
 funcState_t ESP8266_Reset();
 funcState_t ESP8266_wifiConnect(char *SSID, char *Password);
 funcState_t ESP8266_portConnect(char *type, char *remoteIP, char *remotePort);

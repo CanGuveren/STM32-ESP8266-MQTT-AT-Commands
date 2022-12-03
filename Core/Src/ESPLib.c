@@ -5,10 +5,9 @@
  *      Author: Can Güveren
  */
 
-#include <ESPLib.h>
-#include "main.h"
+#include "ESPLib.h"
 
-extern UART_HandleTypeDef huart2;
+static UART_HandleTypeDef esp_uart;
 
 /*Responses and Commands*/
 char *OK = "OK\r\n";
@@ -28,20 +27,22 @@ static void sendData(char *cmd, uint8_t cmdSize, uint8_t responseSize, uint32_t 
 	//HAL_UART_Receive(&huart2, (uint8_t *)Buffer, 1, 10);
 	memset(Buffer, 0, BUFFERSIZE);
 
-	uartCheck = HAL_UART_Transmit(&huart2, (uint8_t *)cmd, cmdSize, 100);
+	uartCheck = HAL_UART_Transmit(&esp_uart, (uint8_t *)cmd, cmdSize, 100);
 
 	if(uartCheck == HAL_OK)
 	{
-		HAL_UART_Receive(&huart2, (uint8_t *)Buffer, cmdSize + responseSize + 2, timeout); // +2 = \r\n
+		HAL_UART_Receive(&esp_uart, (uint8_t *)Buffer, cmdSize + responseSize + 2, timeout); // +2 = \r\n
 	}
 }
 
 
-funcState_t ESP8266_Init(espMode_t Mode)
+funcState_t ESP8266_Init(espMode_t Mode, UART_HandleTypeDef UARTHandle)
 {
 	funcState_t checkFunc;
 	char cmd[20];
 	uint8_t cmdSize;
+
+	memcpy(&esp_uart, &UARTHandle, sizeof(UARTHandle));
 
 	do{
 	sendData("AT\r\n", strlen("AT\r\n"), strlen(OK), 100);
@@ -121,7 +122,7 @@ funcState_t ESP8266_sendMessage(char *msg, uint8_t msgSize)
 	char cmd[100];
 	uint8_t cmdSize;
 
-	HAL_UART_AbortReceive_IT(&huart2);
+	HAL_UART_AbortReceive_IT(&esp_uart);
 
 	do{
 	memset(cmd, 0, sizeof(cmd));
@@ -135,7 +136,7 @@ funcState_t ESP8266_sendMessage(char *msg, uint8_t msgSize)
 		sendData(msg, msgSize, 70, 1000);
 	}
 
-	HAL_UART_Receive_IT(&huart2, &uartRxData, 1);
+	HAL_UART_Receive_IT(&esp_uart, &uartRxData, 1);
 
 	return funcOk;
 }
@@ -311,7 +312,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		DataCounter  = 0;
 	}
 
-	HAL_UART_Receive_IT(&huart2 , &uartRxData , 1);
+	HAL_UART_Receive_IT(&esp_uart , &uartRxData , 1);
 	uartTimeCounter = 0;
 }
 

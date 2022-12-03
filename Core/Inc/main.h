@@ -37,7 +37,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern volatile uint32_t flagSend;
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

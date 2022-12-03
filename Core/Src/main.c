@@ -91,8 +91,8 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  ESP8266_Init(StationMode);
-  ESP8266_wifiConnect("******","*******");
+  ESP8266_Init(StationMode, huart2);
+  ESP8266_wifiConnect("******","******");
   ESP8266_portConnect("TCP", "***.***.*.***", "1883");
 
   MQTT_InitTypeDef_t mqttSetting;
@@ -117,10 +117,9 @@ int main(void)
 	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
 
 	  MQTT_publishTopic("test", "hello", QoS0);
-	  MQTT_pingReq();
 	  HAL_Delay(1000);
 
-	  MQTTDataHandler(mqttTopic, mqttData);
+
 	  /*
 	  MQTTDataHandler(mqttTopic, mqttData);
 
