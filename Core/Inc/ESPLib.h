@@ -30,7 +30,7 @@ char Buffer[BUFFERSIZE];
 char rxBuffer[BUFFERSIZE];
 char mqttBuffer[BUFFERSIZE];
 char mqttPacket[BUFFERSIZE];
-char temp_mqttBuffer[BUFFERSIZE];
+
 
 typedef enum
 {
