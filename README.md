@@ -27,6 +27,9 @@ int main(void)
 :warning:In this mode, you must write the MQTTTimer() in the systick timer.
 
 ```C
+char mqttData[50];
+char mqttTopic[10];
+
 int main(void)
 {
   ESP8266_Init(StationMode, huart2);
